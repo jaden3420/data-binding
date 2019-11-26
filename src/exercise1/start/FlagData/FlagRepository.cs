@@ -16,12 +16,10 @@ namespace FlagData
     public class FlagRepository
     {
         public IList<string> Countries { get; }
-
         /// <summary>
         /// The list of available flags
         /// </summary>
         public IList<Flag> Flags { get; }
-
         /// <summary>
         /// Locate a country by the name.
         /// </summary>
@@ -32,7 +30,6 @@ namespace FlagData
             return Flags
                 .FirstOrDefault(f => string.Compare(f.Country, country, StringComparison.OrdinalIgnoreCase) == 0);
         }
-
         /// <summary>
         /// Return the list of countries.
         /// </summary>
@@ -41,22 +38,20 @@ namespace FlagData
         {
             return Flags.Select(f => f.Country);
         }
-
         /// <summary>
         /// Constructor - loads the flags
         /// </summary>
         public FlagRepository()
         {
             var dataAssembly = GetType().GetTypeInfo().Assembly;
-
             // Get our XML data.
             var data = XElement.Load(dataAssembly
                         .GetManifestResourceStream("FlagData.Data.flags.xml"));
-
             // Turn the XML into Flag objects with LINQ to XML.
             var flags = data.Elements("flag")
                 .Select(f =>
-                   new Flag {
+                   new Flag
+                   {
                        Country = f.Attribute("country").Value,
                        ImageUrl = "FlagData." + f.Attribute("imageUrl").Value,
                        DateAdopted = (DateTime)f.Attribute("adopted"),
@@ -64,9 +59,7 @@ namespace FlagData
                        MoreInformationUrl = new Uri(f.Attribute("url").Value),
                        Description = f.Value.Trim()
                    });
-
             Flags = new List<Flag>(flags);
-
             // Read the countries in.
             Countries = new List<string>();
             using (var sr = new StreamReader(dataAssembly.GetManifestResourceStream("FlagData.Data.countries.csv")))

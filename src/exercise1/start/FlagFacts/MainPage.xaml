@@ -3,18 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:FlagFacts"
              xmlns:eff="clr-namespace:FlagFacts.Effects"
+             xmlns:data="clr-namespace:FlagData;assembly=FlagData"
+             xmlns:cvt="clr-namespace:FlagFacts.Converters"
              x:Class="FlagFacts.MainPage"
              Title="Fun with Flags">
-
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <cvt:EmbeddedImageConverter x:Key="irConverter"
+                    ResolvingAssemblyType="{x:Type data:Flag}" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <ContentPage.ToolbarItems>
         <ToolbarItem Text="Previous"
                      Clicked="OnPrevious" Icon="ic_arrow_drop_up_black.png" />
-        <ToolbarItem Text="Next" 
+        <ToolbarItem Text="Next"
                      Clicked="OnNext" Icon="ic_arrow_drop_down_black.png" />
-        <ToolbarItem Text="Show" 
+        <ToolbarItem Text="Show"
                      Clicked="OnShow" Icon="ic_action_search.png" />
     </ContentPage.ToolbarItems>
-
     <ScrollView>
         <StackLayout Spacing="10">
             <StackLayout.Padding>
@@ -24,23 +32,19 @@
                     <On Platform="UWP" Value="10" />
                 </OnPlatform>
             </StackLayout.Padding>
-
-            <Image x:Name="flagImage" HeightRequest="200" 
-                    HorizontalOptions="Center"
-                    VerticalOptions="Center"
-                    Aspect="AspectFit" />
-
-            <Picker x:Name="country" />
-
+            <Image HeightRequest="200"
+                   Source="{Binding ImageUrl, Mode=OneWay, Converter={StaticResource irConverter}}"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   Aspect="AspectFit" />
+            <Picker x:Name="country" SelectedItem="{Binding Country}"/>
             <Label Text="Current Design was Adopted on" FontAttributes="Bold" />
-            <DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start" />
-
+            <DatePicker x:Name="adopted" MinimumDate="01/01/1700" HorizontalOptions="Start"
+               Date="{Binding DateAdopted}" />
             <Label Text="Has Shield" FontAttributes="Bold" />
-            <Switch x:Name="hasShield" />
-
+            <Switch x:Name="hasShield" IsToggled="{Binding IncludesShield}" />
             <Label Text="Fun Fact" FontAttributes="Bold" />
-            <Label x:Name="description" />
-
+            <Label x:Name="description" Text="{Binding Description}" />
             <Label x:Name="moreInfo" Text="More Information" Margin="0,0,10,0"
                     TextColor="Blue" HorizontalOptions="End">
                 <Label.Effects>
@@ -50,8 +54,6 @@
                     <TapGestureRecognizer Tapped="OnMoreInformation" />
                 </Label.GestureRecognizers>
             </Label>
-
         </StackLayout>
     </ScrollView>
-
 </ContentPage>
